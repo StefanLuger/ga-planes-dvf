@@ -6,7 +6,7 @@ from src.registration import warp_volume, compute_jacobian_loss, compute_dvf_tv_
 from src.utils import log_to_json, save_checkpoint_slices
 
 def main():
-    num_iterations = 200
+    num_iterations = 50
     learning_rate = 1e-3
     lambda_jacobian = 1e3
     lambda_grid_tv = 1e-1

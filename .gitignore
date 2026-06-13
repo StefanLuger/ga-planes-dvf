@@ -1,0 +1,11 @@
+outputs/
+output/
+
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+.vscode/
+.idea/
+.ipynb_checkpoints/
