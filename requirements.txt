@@ -1,3 +1,9 @@
-torch>=2.0.0
+torch
+torchvision
+hydra-core
+omegaconf
+tqdm
 numpy
 matplotlib
+imageio
+Pillow
