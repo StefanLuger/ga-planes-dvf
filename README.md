@@ -129,8 +129,8 @@ Early iterations operate on a low-resolution proxy DVF (downsampled by `scale` $
 ## Installation
 
 ```bash
-git clone <repo-url>
-cd motiongap
+git clone https://github.com/StefanLuger/ga-planes-dvf.git
+cd ga-planes-dvf
 pip install -r requirements.txt
 ```
 
