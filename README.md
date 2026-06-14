@@ -56,7 +56,7 @@ $$\text{LVol} = e_x \cdot e_{yzt} + e_y \cdot e_{xzt} + e_z \cdot e_{xyt} + e_t 
 
 These are concatenated and decoded by an MLP:
 
-$$\mathbf{u}(z, y, x, t) = \text{MLP}\left(\text{concat}[\,\text{LLLL},\, \text{PP},\, \text{LVol}]\right)$$
+$$\mathbf{u}(z, y, x, t) = \text{MLP}\left(\text{concat}[\text{LLLL},\text{PP},\text{LVol}]\right)$$
 
 ### DVF Parameterization and Warping
 
