@@ -10,7 +10,7 @@
 
 GA-Planes-DVF is an implicit neural representation framework for **non-rigid 3D volume registration**. A Deformation Vector Field (DVF) $\mathbf{u} : \mathbb{R}^3 \to \mathbb{R}^3$ is parameterized by a multi-resolution Geometric Algebra Planes (GA-Planes) network and optimized directly in image space by minimizing the mean squared error (MSE) between a warped moving volume and a fixed target volume.
 
-The architecture natively supports **4D (3D + time)** fields, enabling motion compensation across multiple acquisitions or respiratory phases.
+The architecture natively supports **4D (3D + time)** fields, enabling motion compensation across multiple acquisitions.
 
 > **MotionGAP: Non-Rigid Motion Compensated 3D Brain MRI Reconstruction via Implicit Neural Volumes** *(coming soon)*
 >
@@ -30,7 +30,7 @@ The architecture natively supports **4D (3D + time)** fields, enabling motion co
 
 ### Feature Grid Factorization
 
-GA-Planes decomposes a 4D implicit field into a hierarchy of low-dimensional, learnable feature grids. Given coordinates $(z, y, x, t)$, features are interpolated from three families of grids at each resolution level $\ell$:
+GA-Planes decomposes a 4D implicit field into a hierarchy of low-dimensional, learnable feature grids. Given coordinates $(z, y, x, t)$, features are interpolated from three families of grids:
 
 **Lines** (1-D grids along each axis):
 
@@ -44,19 +44,7 @@ $$e_{xy},\, e_{xz},\, e_{yz} \in \mathbb{R}^{N_p \times N_p \times C}, \quad e_{
 
 $$e_{xyz} \in \mathbb{R}^{N_{vt}^3 \times C}, \quad e_{xyt},\, e_{xzt},\, e_{yzt} \in \mathbb{R}^{N_{tt} \times N_{vt}^2 \times C}$$
 
-### Geometric Algebra Products
-
-Interpolated features are combined via element-wise Geometric Algebra (GA) outer products before decoding. In the non-convex mode used here, three product terms are computed:
-
-$$\text{LLLL} = e_x \cdot e_y \cdot e_z \cdot e_t$$
-
-$$\text{PP} = e_{xy} \cdot e_{zt} + e_{xz} \cdot e_{yt} + e_{xt} \cdot e_{yz}$$
-
-$$\text{LVol} = e_x \cdot e_{yzt} + e_y \cdot e_{xzt} + e_z \cdot e_{xyt} + e_t \cdot e_{xyz}$$
-
-These are concatenated and decoded by an MLP:
-
-$$\mathbf{u}(z, y, x, t) = \text{MLP}\left(\text{concat}[\text{LLLL},\text{PP},\text{LVol}]\right)$$
+By introducing a structured factorization over geometric-algebra basis elements, GA-Planes improves the tradeoff between expressiveness, memory efficiency, and optimizability.
 
 ### DVF Parameterization and Warping
 
