@@ -203,7 +203,6 @@ Key parameters in `configs/config.yaml`:
 | `model.use_hypervol` | Enable 4-D hypervolume grid |
 | `model.max_amplitude` | DVF output clamp (voxels) |
 | `loss.lambda_jacobian` | Weight for Jacobian determinant penalty |
-| `loss.lambda_grid_tv` | Weight for feature grid TV loss |
 | `loss.lambda_dvf_tv` | Weight for DVF TV loss |
 | `schedule.enabled` | Enable multi-resolution coarse-to-fine schedule |
 
@@ -213,16 +212,13 @@ Key parameters in `configs/config.yaml`:
 
 ```
 outputs/
-├── checkpoints/
-│   ├── progress_0000.png    # Middle-slice comparison (target / moving / warped / error)
-│   └── ...
 ├── dvf_slices/
 │   ├── dvf_0000.png         # Orthogonal DVF component maps + vector fields
 │   └── ...
 ├── frames/
-│   ├── frame_0000.png       # Optimization frame (images + live loss curve)
+│   ├── frame_0000.png       # Optimization frame (images + loss curve)
 │   └── ...
-├── optimization.gif          # Timelapse GIF of training
+├── optimization.gif          # Timelapse GIF of optimization
 ├── final_dvf.pt              # Saved DVF tensor (1, 3, D, H, W)
 └── run_log.json              # Full per-iteration metrics and run parameters
 ```
