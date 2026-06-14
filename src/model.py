@@ -114,7 +114,7 @@ class GAPlanesDVF(nn.Module):
         self.use_gradient_checkpointing = bool(use_gradient_checkpointing)
 
         if use_pe:
-            self._pe_scale = nn.Parameter(torch.tensor(1e-3))
+            self._pe_scale = nn.Parameter(torch.tensor(1e-4))
 
         def _p(*shape: int) -> nn.Parameter:
             if mode == "nonconvex":
@@ -516,3 +516,21 @@ class GAPlanesDVF(nn.Module):
                     tv = self.trivols_mr[l][k]
                     if tv.shape[2] >= 3: loss = loss + acc2(tv, 2)
         return loss
+
+
+    @torch.no_grad()
+    def dvf_stats(self) -> dict:
+        dvf      = self.materialise_dvf()               # (1, 3, D, H, W, T)
+        mag      = dvf.pow(2).sum(dim=1).sqrt()          # (1, D, H, W, T)
+        per_shot = mag.amax(dim=(0, 1, 2, 3))            # (T,)
+        return {
+            "dvf/max_shot_mean": float(per_shot.mean()),
+            "dvf/max_shot_max":  float(per_shot.max()),
+            "in_dim":            int(self._in_dim),
+            "mode":              self.mode,
+            "use_trivols":       self.use_trivols,
+            "use_hypervol":      self.use_hypervol,
+        }
+
+    def count_parameters(self) -> int:
+        return sum(p.numel() for p in self.parameters() if p.requires_grad)
