@@ -74,7 +74,13 @@ $$\mathcal{L}=\underbrace{\|\hat{I}_M - I_T\|_2^2}_{\text{MSE}}+\lambda_{\mathrm
 
 where $\mathcal{L}_{\mathrm{reg}}$ may include one or more of the following regularizers:
 
-- **Jacobian penalty** $\mathcal{L}_{\text{jac}}$: penalizes $(\log \det J_{\mathbf{u}})^2$ and negative Jacobian determinants to discourage folding and non-invertible deformations.
+- **Jacobian penalty** 
+
+$$
+\mathcal{L}_{\text{jac}} = (\log \det J_{\mathbf{u}})^2
+$$
+
+Jacobian penalty discourages folding and non-invertible deformations.
 
 - **DVF TV** $\mathcal{L}_{\text{dvf-TV}}$: 
 total variation regularization on the materialized displacement vector field to encourage spatial smoothness.
