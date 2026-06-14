@@ -4,7 +4,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from dataclasses import dataclass
 from typing import List, Optional, Tuple, Dict
-from src.model import GAPlanesDVF
 
 @dataclass
 class DvfScaleStage:
@@ -26,6 +25,7 @@ class DvfLowresSchedule:
             if frac <= stage.until_frac:
                 return stage.scale
         return self.stages[-1].scale
+        
 
 def warp_volume(moving: torch.Tensor, dvf: torch.Tensor) -> torch.Tensor:
     D, H, W = moving.shape[2], moving.shape[3], moving.shape[4]
@@ -42,6 +42,7 @@ def warp_volume(moving: torch.Tensor, dvf: torch.Tensor) -> torch.Tensor:
     dvf_normalized = torch.stack([u_x, u_y, u_z], dim=-1)
     grid = grid_identity + dvf_normalized
     return F.grid_sample(moving, grid, mode="bilinear", padding_mode="zeros", align_corners=True)
+    
 
 def compute_jacobian_loss(u: torch.Tensor, eps: float = 1e-6, fold_weight: float = 10.0) -> torch.Tensor:
     duz_dz = u[:, 0, 1:, :-1, :-1] - u[:, 0, :-1, :-1, :-1]
@@ -71,6 +72,7 @@ def compute_jacobian_loss(u: torch.Tensor, eps: float = 1e-6, fold_weight: float
     smooth_loss = torch.mean(torch.log(det_J_safe) ** 2)
     fold_loss = torch.mean(torch.clamp(-det_J, min=0.0))
     return smooth_loss + fold_weight * fold_loss
+    
 
 def compute_dvf_tv_loss(u: torch.Tensor) -> torch.Tensor:
     diff_z = torch.pow(u[:, :, 1:, :, :] - u[:, :, :-1, :, :], 2).sum()
