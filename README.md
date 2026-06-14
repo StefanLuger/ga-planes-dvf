@@ -14,7 +14,7 @@ The architecture natively supports **4D (3D + time)** fields, enabling motion co
 
 > **MotionGAP: Non-Rigid Motion Compensated 3D Brain MRI Reconstruction via Implicit Neural Volumes** *(coming soon)*
 >
-> Built on top of [GA-Planes: Geometric Algebra Planes — Convex Implicit Neural Volumes](https://arxiv.org/abs/2411.13525) [1].
+> Built on top of [GA-Planes: Geometric Algebra Planes — Convex Implicit Neural Volumes](https://arxiv.org/abs/2411.13525) [1] and [MotionDPS: Motion-Compensated 3D Brain MRI Reconstruction](https://arxiv.org/html/2605.22121) [2].
 
 ---
 
@@ -54,15 +54,15 @@ $$\text{PP} = e_{xy} \cdot e_{zt} + e_{xz} \cdot e_{yt} + e_{xt} \cdot e_{yz}$$
 
 $$\text{LVol} = e_x \cdot e_{yzt} + e_y \cdot e_{xzt} + e_z \cdot e_{xyt} + e_t \cdot e_{xyz}$$
 
-These are concatenated across all resolution levels $\ell = 1, \ldots, L$ and decoded by a shallow MLP:
+These are concatenated and decoded by an MLP:
 
-$$\mathbf{u}(z, y, x, t) = \text{MLP}\!\left(\text{concat}\!\left[\,\text{LLLL}^\ell,\, \text{PP}^\ell,\, \text{LVol}^\ell\,\right]_{\ell=1}^{L}\right)$$
+$$\mathbf{u}(z, y, x, t) = \text{MLP}\left(\text{concat}[\,\text{LLLL},\, \text{PP},\, \text{LVol}]\right)$$
 
 ### DVF Parameterization and Warping
 
 The network materializes a dense DVF $\mathbf{u} \in \mathbb{R}^{1 \times 3 \times D \times H \times W}$ over the full spatial grid. Backward warping maps the moving image $I_M$ to the target $I_T$ via:
 
-$$\hat{I}_M(\mathbf{p}) = I_M\!\left(\mathbf{p} + \mathbf{u}(\mathbf{p})\right)$$
+$$\hat{I}_M(\mathbf{p}) = I_M\left(\mathbf{p} + \mathbf{u}(\mathbf{p})\right)$$
 
 where $\mathbf{p} = (z, y, x)$ indexes voxel positions.
 
@@ -70,13 +70,7 @@ where $\mathbf{p} = (z, y, x)$ indexes voxel positions.
 
 The optimization objective consists of an image similarity term (MSE) and an optional regularization term:
 
-$$
-\mathcal{L}
-=
-\underbrace{\|\hat{I}_M - I_T\|_2^2}_{\text{MSE}}
-+
-\lambda_{\mathrm{reg}}\,\mathcal{L}_{\mathrm{reg}},
-$$
+$$\mathcal{L}=\underbrace{\|\hat{I}_M - I_T\|_2^2}_{\text{MSE}}+\lambda_{\mathrm{reg}}\,\mathcal{L}_{\mathrm{reg}}$$
 
 where $\mathcal{L}_{\mathrm{reg}}$ may include one or more of the following regularizers:
 - **Jacobian penalty** $\mathcal{L}_{\text{jac}}$: penalizes $(\log \det J_{\mathbf{u}})^2$ and negative Jacobian determinants to discourage folding and non-invertible deformations.
@@ -144,7 +138,7 @@ data/
 └── target_volume.pt
 ```
 
-The example volume used in this repository is a sample from the [Calgary Campinas Brain MRI Dataset (CC59)](https://portal.conp.ca/dataset?id=projects/calgary-campinas#) [1] with size $256 \times 218 \times 170$.
+The example volume used in this repository is a sample from the [Calgary Campinas Brain MRI Dataset (CC59)](https://portal.conp.ca/dataset?id=projects/calgary-campinas#) [3] with size $256 \times 218 \times 170$.
 
 For the provided configuration, peak GPU memory usage is approximately 39GB and runtime less than 5 minutes on a NVIDIA A100. Users with more limited hardware resources may need to reduce the volume resolution or grid resolution.
 
@@ -226,7 +220,8 @@ outputs/
 
 ## References
 - [1] Sivgin et al. "Geometric Algebra Planes: Convex Implicit Neural Volumes". In: *arXiv:2411.13525* (2024). 
-- [2] Souza et al. "An Open, Multi-Vendor, Multi-Field-Strength Brain MR Dataset and Analysis of Publicly Available Skull Stripping Methods Agreement". In: *NeuroImage* (2018).
+- [2] Ortiz-Gonzalez et al. "MotionDPS: Motion-Compensated 3D Brain MRI Reconstruction". In: *arXiv:2605.22121v1* (2026). 
+- [3] Souza et al. "An Open, Multi-Vendor, Multi-Field-Strength Brain MR Dataset and Analysis of Publicly Available Skull Stripping Methods Agreement". In: *NeuroImage* (2018).
 
 
 ---
