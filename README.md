@@ -22,7 +22,7 @@ The architecture natively supports **4D (3D + time)** fields, enabling motion co
   <img src="docs/figures/MotionGAP_architecture.png" alt="MotionGAP architecture" width="760"/>
 </p>
 
-*Figure: MotionGAP pipeline. Spatial coordinates (z, y, x) and a shot index $t$ are encoded by multi-resolution feature grids (lines, planes, trivols). GA outer products combine the features, which are decoded by a small MLP to produce the dense DVF.*
+*Figure: MotionGAP pipeline. Spatial coordinates (z, y, x) and a shot index t are encoded by multi-resolution feature grids (lines, planes, trivols). GA outer products combine the features, which are decoded by a small MLP to produce the dense DVF.*
 
 ---
 
@@ -73,8 +73,8 @@ The optimization objective consists of an image similarity term (MSE) and an opt
 $$\mathcal{L}=\underbrace{\|\hat{I}_M - I_T\|_2^2}_{\text{MSE}}+\lambda_{\mathrm{reg}}\mathcal{L}_{\mathrm{reg}}$$
 
 where $\mathcal{L}_{\mathrm{reg}}$ may include one or more of the following regularizers:
-- **Jacobian penalty** $\mathcal{L}_{\text{jac}}$: 
-penalizes $(\log \det J_{\mathbf{u}})^2$ and negative Jacobian determinants to discourage folding and non-invertible deformations.
+
+- **Jacobian penalty** $\mathcal{L}_{\text{jac}}$: penalizes $(\log \det J_{\mathbf{u}})^2$ and negative Jacobian determinants to discourage folding and non-invertible deformations.
 
 - **DVF TV** $\mathcal{L}_{\text{dvf-TV}}$: 
 total variation regularization on the materialized displacement vector field to encourage spatial smoothness.
