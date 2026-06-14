@@ -1,4 +1,4 @@
-# GA-Planes-DVF: Non-Rigid 3D Volume Registration via GA-Planes
+# Non-Rigid 3D Volume Registration via GA-Planes
 
 <p align="center">
   <img src="docs/images/optimization_example.gif" alt="Optimization example" width="720"/>
