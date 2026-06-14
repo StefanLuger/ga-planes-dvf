@@ -1,0 +1,84 @@
+
+hydra:
+  run:
+    dir: runs/${now:%Y-%m-%d_%H-%M-%S}
+
+  job:
+    chdir: true
+
+  job_logging:
+    formatters:
+      simple:
+        format: '[%(name)s][%(levelname)s] - %(message)s'
+        
+training:
+  iterations: 400
+  learning_rate: 5e-4
+  log_every: 10
+
+  lr_scheduler:
+    enable: false        
+    type: "cosine"        
+    eta_min: 1e-4        
+    gamma: 0.995         
+
+loss:
+  lambda_jacobian: 0.0
+  lambda_dvf_tv: 0.0
+
+schedule:
+  enabled: true
+
+  stages:
+    - until_frac: 0.5
+      scale: 0.25
+
+    - until_frac: 0.9
+      scale: 0.5
+
+    - until_frac: 1.0
+      scale: 1.0
+
+model:
+
+  mode: nonconvex
+
+  use_trivols: true
+  use_hypervol: false
+
+  decoder_hidden: 128
+
+  Np_list: [32,16]
+  Nl_list: [128,64]
+  Nt_list: null
+  C_list: [16,8]
+
+  enable_copies: false
+  n_copies: [1,1]
+
+  Nvt: 8
+  Ntt: 16
+
+  Chv: 4
+  Nhv: 8
+  Nthv: 16
+
+  use_pe: false
+
+  pe_L_xyz: 4
+  pe_L_t: 6
+  pe_input_scale: 1e-5
+
+  max_amplitude: 40.0
+  output_scale: 1.0
+
+  init_std_grids: 0.001
+
+  use_chunking: false
+  spatial_chunk_size: 524288
+
+  use_gradient_checkpointing: false
+
+paths:
+  moving: data/moving_volume.pt
+  target: data/target_volume.pt
