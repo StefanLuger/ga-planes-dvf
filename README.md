@@ -138,7 +138,7 @@ pip install -r requirements.txt
 
 ## Data
 
-Volumes must be PyTorch tensors of shape `(1, 1, D, H, W)` saved with `torch.save`:
+Volumes must be PyTorch tensors of shape `(1, 1, D, H, W)`:
 
 ```
 data/
@@ -146,7 +146,10 @@ data/
 └── target_volume.pt
 ```
 
-The example volume used in this repository is a sample from the [Calgary Campinas Brain MRI Dataset (CC59)](https://portal.conp.ca/dataset?id=projects/calgary-campinas#) [3] with size $256 \times 218 \times 170$.
+The example volume used in this repository is a sample from the [Calgary Campinas Brain MRI Dataset (CC59)](https://portal.conp.ca/dataset?id=projects/calgary-campinas#) [3].
+
+size:
+$$256 \times 218 \times 170$$
 
 For the provided configuration, peak GPU memory usage is approximately 39GB and runtime less than 5 minutes on a NVIDIA A100. Users with more limited hardware resources may need to reduce the volume resolution or grid resolution.
 
