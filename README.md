@@ -199,7 +199,7 @@ Key parameters in `configs/config.yaml`:
 ## Outputs
 
 ```
-outputs/
+runs/
 ├── dvf_slices/
 │   ├── dvf_0000.png         # Orthogonal DVF component maps + vector fields
 │   └── ...
