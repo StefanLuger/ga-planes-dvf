@@ -78,10 +78,11 @@ class GAPlanesDVF(nn.Module):
         if mode not in ("nonconvex", "semiconvex", "convex"):
             raise ValueError(f"Unknown mode: {mode}")
         if Np_list is None: Np_list = [32, 16]
-        if Nl_list is None: Nl_list = [64, 32]
-        if Nt_list is None: Nt_list = [8, 4]
-        if C_list is None: C_list = [8, 8]
         L = len(Np_list)
+        if Nl_list is None: Nl_list = [64, 32]
+        if Nt_list is None:
+            Nt_list = [1] * L
+        if C_list is None: C_list = [8, 8]
         if not (len(Nl_list) == len(Nt_list) == len(C_list) == L):
             raise ValueError("Lists must have equal length.")
         if n_copies is None or not enable_copies:
