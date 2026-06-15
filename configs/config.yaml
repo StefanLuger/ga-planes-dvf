@@ -10,6 +10,9 @@ hydra:
     formatters:
       simple:
         format: '[%(name)s][%(levelname)s] - %(message)s'
+
+device:
+  cuda_index: 0
         
 training:
   iterations: 400
@@ -30,10 +33,10 @@ schedule:
   enabled: true
 
   stages:
-    - until_frac: 0.5
+    - until_frac: 0.25
       scale: 0.25
 
-    - until_frac: 0.9
+    - until_frac: 0.5
       scale: 0.5
 
     - until_frac: 1.0
@@ -48,16 +51,16 @@ model:
 
   decoder_hidden: 128
 
-  Np_list: [32,16]
-  Nl_list: [128,64]
+  Np_list: [64,16]
+  Nl_list: [256,64]
   Nt_list: null
-  C_list: [16,8]
+  C_list: [16,16]
 
   enable_copies: false
   n_copies: [1,1]
 
   Nvt: 8
-  Ntt: 16
+  Ntt: 1
 
   Chv: 4
   Nhv: 8
