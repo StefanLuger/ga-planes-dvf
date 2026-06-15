@@ -26,9 +26,6 @@ torch.cuda.manual_seed_all(seed)
 
 log = logging.getLogger(__name__)
 
-os.environ["CUDA_VISIBLE_DEVICES"] = "2"
-os.environ["PYTORCH_CUDA_ALLOC_CONF"] = "expandable_segments:True"
-
 @hydra.main(
     version_base=None,
     config_path="configs",
