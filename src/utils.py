@@ -5,9 +5,22 @@ import imageio
 import torch
 import numpy as np
 
+import monai
+import monai.metrics
+
 from pathlib import Path
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
+
+
+def psnr(y_pred, y, max_val=1.0, **kwargs) -> torch.Tensor:
+    m = monai.metrics.PSNRMetric(max_val=max_val, **kwargs)
+    return m(y_pred, y)
+
+
+def ssim(y_pred, y, data_range=1.0, **kwargs) -> torch.Tensor:
+    m = monai.metrics.SSIMMetric(spatial_dims=3 if y.dim() == 5 else 2, data_range=data_range, **kwargs)
+    return m(y_pred, y)
 
 
 def log_to_json(filepath, data):
@@ -192,73 +205,64 @@ def save_optimization_frame(
     loss_history,
     iteration=None,
     total_iterations=None,
+    psnr_val=None,
+    ssim_val=None,
 ):
     moving_slice = get_middle_slice(moving)
     target_slice = get_middle_slice(target)
     warped_slice = get_middle_slice(warped)
-
     error = target_slice - warped_slice
-
     if not hasattr(save_optimization_frame, "static_vmax"):
         calculated_vmax = np.percentile(np.abs(error), 99)
         save_optimization_frame.static_vmax = max(calculated_vmax, 1e-8)
-
     vmax = save_optimization_frame.static_vmax
     current_loss = loss_history[-1]
-
     fig = plt.figure(figsize=(15, 3.8))
-
     gs_master = gridspec.GridSpec(1, 2, width_ratios=[4, 1.2], wspace=0.3)
-
     gs_images = gridspec.GridSpecFromSubplotSpec(
         1, 4, subplot_spec=gs_master[0], wspace=0.02
     )
-
     ax = []
     for i in range(4):
         ax.append(fig.add_subplot(gs_images[i]))
     ax.append(fig.add_subplot(gs_master[1]))
-
     ax[0].imshow(moving_slice, cmap="gray")
     ax[0].set_title("Moving", fontsize=10)
-
     ax[1].imshow(target_slice, cmap="gray")
     ax[1].set_title("Target", fontsize=10)
-
     ax[2].imshow(warped_slice, cmap="gray")
     ax[2].set_title("Warped", fontsize=10)
-
     im = ax[3].imshow(error, cmap="RdBu_r", vmin=-vmax, vmax=vmax)
     ax[3].set_title("Target - Warped", fontsize=10)
-
     cbar = fig.colorbar(im, ax=ax[3], fraction=0.046, pad=0.03)
     cbar.ax.tick_params(labelsize=8)
-
     ax[4].plot(loss_history, linewidth=2, color="tab:blue")
-    ax[4].set_title("Loss", fontsize=10)
     ax[4].set_xlabel("Iteration", fontsize=8)
     ax[4].set_ylabel("Loss", fontsize=8)
     ax[4].tick_params(axis="both", labelsize=8)
-
     if total_iterations:
         ax[4].set_xlim(0, total_iterations)
-
     ax[4].grid(True, alpha=0.3)
-    ax[4].scatter(
-        len(loss_history) - 1, current_loss, color="tab:red", s=25, zorder=5
-    )
+    ax[4].scatter(len(loss_history) - 1, current_loss, color="tab:red", s=25, zorder=5)
+
+    loss_label = f"Loss = {current_loss:.6f}"
+    if psnr_val is not None:
+        loss_label += f"  |  PSNR = {psnr_val:.2f}"
+    if ssim_val is not None:
+        loss_label += f"  |  SSIM = {ssim_val:.4f}"
+    ax[4].set_title(loss_label, fontsize=8)
 
     for i in range(4):
         ax[i].axis("off")
-
     if iteration is not None:
         fig.suptitle(
-            f"Iteration {iteration} | Loss = {current_loss:.6f}",
+            f"Iteration {iteration} | Loss = {current_loss:.6f}"
+            + (f" | PSNR = {psnr_val:.2f}" if psnr_val is not None else "")
+            + (f" | SSIM = {ssim_val:.4f}" if ssim_val is not None else ""),
             fontsize=11,
             fontweight="bold",
             y=0.98,
         )
-
     plt.savefig(output_path, dpi=100, bbox_inches="tight")
     plt.close()
     
