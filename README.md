@@ -82,9 +82,9 @@ Early iterations operate on a low-resolution proxy DVF (downsampled by `scale` $
 
 | Fraction of iterations | DVF scale |
 |---|---|
-| 0 – 50% | 0.25× |
-| 50 – 90% | 0.50× |
-| 90 – 100% | 1.00× |
+| 0 – 25% | 0.25× |
+| 25 – 50% | 0.50× |
+| 50 – 100% | 1.00× |
 
 ---
 
@@ -139,7 +139,7 @@ The example volume used in this repository is a sample from the [Calgary Campina
 size:
 $$256 \times 218 \times 170$$
 
-For the provided configuration, peak GPU memory usage is approximately 39GB and runtime less than 5 minutes on a NVIDIA A100. Users with more limited hardware resources may need to reduce the volume resolution or grid resolution.
+For the provided configuration, peak GPU memory usage is approximately 48GB and runtime 10 minutes on a NVIDIA A100. Users with more limited hardware resources may need to reduce the volume resolution or grid resolution.
 
 ### Create Synthetic Moving Volume
 
