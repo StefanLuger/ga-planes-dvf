@@ -139,7 +139,7 @@ The example volume used in this repository is a sample from the [Calgary Campina
 size:
 $$256 \times 218 \times 170$$
 
-For the provided configuration, peak GPU memory usage is approximately 48GB and runtime 10 minutes on a NVIDIA A100. Users with more limited hardware resources may need to reduce the volume resolution or grid resolution.
+For the provided configuration, runtime is approximately 10 minutes on a NVIDIA A100. Users with more limited hardware resources may need to reduce the volume resolution or grid resolution.
 
 ### Create Synthetic Moving Volume
 
@@ -160,7 +160,7 @@ python main.py
 ### Hydra Override Examples
 
 ```bash
-# More iterations, finer grids
+# More iterations, coarser grids
 python main.py \
     training.iterations=500 \
     training.learning_rate=5e-4 \
