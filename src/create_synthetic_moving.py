@@ -233,13 +233,13 @@ if __name__ == "__main__":
     parser.add_argument(
         "--max_rotation_deg",
         type=float,
-        default=8.0,
+        default=3.0,
         help="Maximum per-axis rotation in degrees (only used with --rigid).",
     )
     parser.add_argument(
         "--max_translation_vox",
         type=float,
-        default=8.0,
+        default=3.0,
         help="Maximum per-axis translation in voxels (only used with --rigid).",
     )
     parser.add_argument(
