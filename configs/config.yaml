@@ -51,15 +51,15 @@ model:
 
   decoder_hidden: 128
 
-  Np_list: [64,16]
-  Nl_list: [256,64]
+  Np_list: [128,64,32]
+  Nl_list: [256,128,64]
   Nt_list: null
-  C_list: [16,16]
+  C_list: [16,16,8]
 
   enable_copies: false
   n_copies: [1,1]
 
-  Nvt: 8
+  Nvt: 16
   Ntt: 1
 
   Chv: 4
